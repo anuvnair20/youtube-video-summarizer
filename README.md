@@ -2,8 +2,9 @@
 
 ## Team Members
 
-* Your Name
-* Friend Name
+* Abhijith Nambiar P
+* Anu V Nair
+* Adarsh PK
 
 ## Project Overview
 
