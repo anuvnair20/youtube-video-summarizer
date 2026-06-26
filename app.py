@@ -5,35 +5,150 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 
-# Load API key from .env
+# ----------------------------
+# PAGE CONFIG
+# ----------------------------
+st.set_page_config(
+    page_title="AI YouTube Video Summarizer",
+    page_icon="🎥",
+    layout="centered"
+)
+
+# ----------------------------
+# CUSTOM CSS
+# ----------------------------
+st.markdown("""
+<style>
+
+/* Background */
+.stApp{
+    background: linear-gradient(to right,#ffe4ec,#fff5f8);
+}
+
+/* Title */
+h1{
+    color:#d81b60;
+    text-align:center;
+    font-weight:bold;
+}
+
+/* Subtitle */
+.subtitle{
+    text-align:center;
+    color:#555;
+    font-size:18px;
+}
+
+/* Text Input */
+.stTextInput>div>div>input{
+    border:2px solid #ff69b4;
+    border-radius:12px;
+    padding:10px;
+}
+
+/* Button */
+.stButton>button{
+    width:100%;
+    background:linear-gradient(90deg,#ff4b91,#ff1493);
+    color:white;
+    border:none;
+    border-radius:12px;
+    padding:12px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.stButton>button:hover{
+    background:linear-gradient(90deg,#ff1493,#c2185b);
+    color:white;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"]{
+    background:#ffd6e8;
+}
+
+/* Success */
+.stSuccess{
+    border-radius:10px;
+}
+
+/* Info */
+.stInfo{
+    border-radius:10px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ----------------------------
+# LOAD API
+# ----------------------------
 load_dotenv()
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Gemini model
 model = genai.GenerativeModel("gemini-2.5-flash")
 
-# Streamlit UI
-st.title("🎥 YouTube Video Summarizer")
+# ----------------------------
+# SIDEBAR
+# ----------------------------
+with st.sidebar:
 
-url = st.text_input("Paste YouTube URL")
+    st.title("💖 About")
 
-if st.button("Generate Summary"):
+    st.write("""
+This application summarizes YouTube videos using **Google Gemini AI**.
+""")
+
+    st.markdown("---")
+
+    st.subheader("✨ Features")
+
+    st.write("✔ AI Generated Summary")
+    st.write("✔ Transcript Extraction")
+    st.write("✔ Key Takeaways")
+    st.write("✔ Download Summary")
+
+    st.markdown("---")
+
+    st.subheader("👨‍💻 Team Members")
+
+    st.success("Abhijith")
+    st.success("Anu")
+    st.success("Adarsh")
+
+# ----------------------------
+# MAIN PAGE
+# ----------------------------
+
+st.title("🎥 AI YouTube Video Summarizer")
+
+st.markdown(
+'<p class="subtitle">Generate AI-powered summaries of YouTube videos using Google Gemini.</p>',
+unsafe_allow_html=True
+)
+
+url = st.text_input(
+    "🔗 Paste YouTube URL",
+    placeholder="https://www.youtube.com/watch?v=..."
+)
+
+if st.button("✨ Generate Summary"):
 
     try:
-        # Extract video ID
+
+        # Extract Video ID
         if "youtu.be" in url:
             video_id = url.split("/")[-1].split("?")[0]
         else:
-            video_id = parse_qs(
-                urlparse(url).query
-            ).get("v", [""])[0]
+            video_id = parse_qs(urlparse(url).query).get("v", [""])[0]
 
         if not video_id:
-            st.error("Invalid YouTube URL")
+            st.error("❌ Invalid YouTube URL")
             st.stop()
 
-        # Get transcript
+        # Fetch Transcript
         api = YouTubeTranscriptApi()
         transcript = api.fetch(video_id)
 
@@ -41,30 +156,36 @@ if st.button("Generate Summary"):
             [item.text for item in transcript]
         )
 
-        # Show transcript (optional)
-        with st.expander("View Transcript"):
+        # Show Transcript
+        with st.expander("📜 View Transcript"):
             st.write(transcript_text)
 
-        # Gemini Prompt
         prompt = f"""
-        Summarize this YouTube video.
+Summarize this YouTube video.
 
-        Give:
-        1. Overview
-        2. Key Points
-        3. Important Takeaways
+Give:
 
-        Transcript:
-        {transcript_text}
-        """
+1. Overview
 
-        # Generate summary
-        response = model.generate_content(prompt)
+2. Key Points
 
-        st.subheader("📄 Summary")
-        st.write(response.text)
+3. Important Takeaways
 
-        # Download button
+Transcript:
+
+{transcript_text}
+"""
+
+        with st.spinner("🤖 Gemini AI is generating the summary..."):
+
+            response = model.generate_content(prompt)
+
+        st.success("✅ Summary Generated Successfully!")
+
+        st.subheader("📄 AI Summary")
+
+        st.info(response.text)
+
         st.download_button(
             label="⬇ Download Summary",
             data=response.text,
@@ -73,4 +194,27 @@ if st.button("Generate Summary"):
         )
 
     except Exception as e:
-        st.error(f"Error: {e}")
+
+        st.error(f"❌ Error: {e}")
+
+# ----------------------------
+# FOOTER
+# ----------------------------
+
+st.markdown("---")
+
+st.markdown(
+"""
+<div style='text-align:center;'>
+
+<h3 style='color:#d81b60;'>❤️ Developed By ❤️</h3>
+
+<h4>Abhijith • Anu • Adarsh</h4>
+
+<p>Built using <b>Python</b>, <b>Streamlit</b>, <b>Google Gemini</b> and
+<b>YouTube Transcript API</b>.</p>
+
+</div>
+""",
+unsafe_allow_html=True
+)
