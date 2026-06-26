@@ -19,7 +19,7 @@ st.set_page_config(
 # ----------------------------
 st.markdown("""
 <style>
-
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 /* Background */
 .stApp{
     background: linear-gradient(to right,#ffe4ec,#fff5f8);
@@ -27,11 +27,12 @@ st.markdown("""
 
 /* Title */
 h1{
+    font-family: 'Dancing Script', cursive;
     color:#d81b60;
     text-align:center;
+    font-size:55px;
     font-weight:bold;
 }
-
 /* Subtitle */
 .subtitle{
     text-align:center;
@@ -95,7 +96,10 @@ model = genai.GenerativeModel("gemini-2.5-flash")
 # ----------------------------
 with st.sidebar:
 
-    st.title("💖 About")
+    st.markdown(
+    "<h1 style='font-family:Dancing Script,cursive;'>💖 About</h1>",
+    unsafe_allow_html=True
+)
 
     st.write("""
 This application summarizes YouTube videos using **Google Gemini AI**.
@@ -103,7 +107,10 @@ This application summarizes YouTube videos using **Google Gemini AI**.
 
     st.markdown("---")
 
-    st.subheader("✨ Features")
+    st.markdown(
+    "<h2 style='font-family:Dancing Script,cursive;'>✨ Features</h2>",
+    unsafe_allow_html=True
+)
 
     st.write("✔ AI Generated Summary")
     st.write("✔ Transcript Extraction")
@@ -112,7 +119,10 @@ This application summarizes YouTube videos using **Google Gemini AI**.
 
     st.markdown("---")
 
-    st.subheader("👨‍💻 Team Members")
+    st.markdown(
+    "<h2 style='font-family:Dancing Script,cursive;'>👨‍💻 Team Members</h2>",
+    unsafe_allow_html=True
+)
 
     st.success("Abhijith")
     st.success("Anu")
@@ -122,7 +132,17 @@ This application summarizes YouTube videos using **Google Gemini AI**.
 # MAIN PAGE
 # ----------------------------
 
-st.title("🎥 AI YouTube Video Summarizer")
+st.markdown("""
+<h1 style="
+font-family:'Dancing Script', cursive;
+font-size:60px;
+color:#d81b60;
+text-align:center;
+text-shadow:2px 2px 6px rgba(0,0,0,0.2);
+margin-bottom:0;">
+🎥 AI YouTube Video Summarizer
+</h1>
+""", unsafe_allow_html=True)
 
 st.markdown(
 '<p class="subtitle">Generate AI-powered summaries of YouTube videos using Google Gemini.</p>',
@@ -207,7 +227,9 @@ st.markdown(
 """
 <div style='text-align:center;'>
 
-<h3 style='color:#d81b60;'>❤️ Developed By ❤️</h3>
+<h2 style="font-family:'Dancing Script', cursive; color:#d81b60;">
+❤️ Developed By 
+</h2>
 
 <h4>Abhijith • Anu • Adarsh</h4>
 
